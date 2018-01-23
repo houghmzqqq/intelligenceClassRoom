@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xmlns:mvc="http://www.springframework.org/schema/mvc"
+     xmlns:context="http://www.springframework.org/schema/context"  
+     xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+     http://www.springframework.org/schema/context 
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/mvc
+     http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    
+    <!-- 本配置文件是名为mvc-dispatcher的DispatcherServlet使用的，为其提供相关的Spring MVC配置 -->
+    
+    <!-- 激活@Required等注解 -->   
+	<context:annotation-config/> 
+	
+	<!-- DispatcherServlet上下文，只搜索@Controller注解的类 -->
+	<context:component-scan base-package="com.yejunfeng.action">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+	</context:component-scan>
+
+	<!-- 扩充了注解驱动，可以将请求参数绑定到控制器参数 -->
+	<mvc:annotation-driven>
+		<!-- 这个配置是为了解决@ResponseBody注解返回乱码的问题 -->
+		<!--<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=utf-8</value>
+						<value>text/html;charset=utf-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>-->
+	</mvc:annotation-driven>
+	
+	<!--<mvc:interceptors>
+    &lt;!&ndash; 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置 &ndash;&gt;
+    	<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />  
+    &lt;!&ndash; 如果不定义 mvc:mapping path 将拦截所有的URL请求 &ndash;&gt;
+    	&lt;!&ndash;<mvc:interceptor>
+    	 <mvc:mapping path="/**/*"/>
+         <mvc:exclude-mapping path="/**/fonts/*"/>
+         <mvc:exclude-mapping path="/**/*.css"/>
+         <mvc:exclude-mapping path="/**/*.js"/>
+         <mvc:exclude-mapping path="/**/*.png"/>
+         <mvc:exclude-mapping path="/**/*.gif"/>
+         <mvc:exclude-mapping path="/**/*.jpg"/>
+         <mvc:exclude-mapping path="/**/*.jpeg"/>
+         <mvc:exclude-mapping path="/**/*login*"/>
+    	&lt;!&ndash;<bean class="com.xyz.gym_management_sys.filter.SecurityInterceptor"></bean>&ndash;&gt;
+    	</mvc:interceptor>
+    	
+    	<mvc:interceptor>
+    	 <mvc:mapping path="/**/equ/*"/>
+         <mvc:exclude-mapping path="/**/fonts/*"/>
+         <mvc:exclude-mapping path="/**/*.css"/>
+         <mvc:exclude-mapping path="/**/*.js"/>
+         <mvc:exclude-mapping path="/**/*.png"/>
+         <mvc:exclude-mapping path="/**/*.gif"/>
+         <mvc:exclude-mapping path="/**/*.jpg"/>
+         <mvc:exclude-mapping path="/**/*.jpeg"/>
+         <mvc:exclude-mapping path="/**/*login*"/>
+    	<bean class="com.xyz.gym_management_sys.filter.EquManageInterceptor"></bean>
+    	</mvc:interceptor>
+    	<mvc:interceptor>
+    	 <mvc:mapping path="/**/userManage/*"/>
+         <mvc:exclude-mapping path="/**/fonts/*"/>
+         <mvc:exclude-mapping path="/**/*.css"/>
+         <mvc:exclude-mapping path="/**/*.js"/>
+         <mvc:exclude-mapping path="/**/*.png"/>
+         <mvc:exclude-mapping path="/**/*.gif"/>
+         <mvc:exclude-mapping path="/**/*.jpg"/>
+         <mvc:exclude-mapping path="/**/*.jpeg"/>
+         <mvc:exclude-mapping path="/**/*login*"/>
+    	<bean class="com.xyz.gym_management_sys.filter.UserManageInterceptor"></bean>
+    	</mvc:interceptor>&ndash;&gt;
+	</mvc:interceptors>-->
+	
+	<!-- 静态资源处理，入css，js，image -->
+	<mvc:resources location="/images/" mapping="/images/**" />
+	<mvc:resources location="/lib/" mapping="/lib/**" />
+	<mvc:resources location="/stylesheets/" mapping="/stylesheets/**" />
+	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/jsps/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="1024000" />
+		<property name="maxInMemorySize" value="514" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<!--<property name="uploadTempDir" value="upload/temp" />-->
+	</bean>
+</beans>

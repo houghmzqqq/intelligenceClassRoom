@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net  
+      http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+	<mapping>
+		<class-a>com.yejunfeng.PO.StudentPO</class-a>
+		<class-b>com.yejunfeng.VO.StudentVO</class-b>
+		<field>
+			<a>classesPO.classId</a>
+			<b>classId</b>
+		</field>
+	</mapping>
+
+	<mapping>
+		<class-a>com.yejunfeng.PO.CourseScheduleTimePO</class-a>
+		<class-b>com.yejunfeng.VO.CourseScheduleVO</class-b>
+		<field>
+			<a>courseSchedulePO.courseScheduleId</a>
+			<b>planId</b>
+		</field>
+		<field>
+			<a>courseSchedulePO.classesPO.classId</a>
+			<b>squadId</b>
+		</field>
+	</mapping>
+
+	<mapping>
+		<class-a>com.yejunfeng.PO.AttendanceRecordPO</class-a>
+		<class-b>com.yejunfeng.VO.StudentRecordVO</class-b>
+		<field>
+			<a>studentPO.studentId</a>
+			<b>studentId</b>
+		</field>
+		<field>
+			<a>studentPO.studentName</a>
+			<b>studentName</b>
+		</field>
+		<field>
+			<a>courseSchedulePO.coursePO.courseName</a>
+			<b>courseName</b>
+		</field>
+		<field>
+			<a>courseSchedulePO.classesPO.className</a>
+			<b>className</b>
+		</field>
+	</mapping>
+	<!-- 器材
+	<mapping>
+		<class-a>com.xyz.gym_management_sys.po.UserInfo</class-a>
+		<class-b>com.xyz.gym_management_sys.vo.UserInfoVo</class-b>
+		<field>
+			<a>user.userId</a>
+			<b>userId</b>
+		</field>
+		<field>
+			<a>user.userName</a>
+			<b>userName</b>
+		</field>
+		<field>
+			<a>user.userRole</a>
+			<b>userRole</b>
+		</field>
+	</mapping>-->
+</mappings>

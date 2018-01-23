@@ -1,0 +1,84 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0"
+         metadata-complete="false">
+<display-name>Archetype Created Web Application</display-name>
+  <!-- 编码拦截器 -->
+  <filter>
+    <filter-name>CharsetFilter</filter-name>
+    <filter-class>com.yejunfeng.util.CharsetFilter</filter-class>
+    <init-param>
+      <param-name>charsetEncoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>enabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>CharsetFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- Spring应用上下文，理解层次化的ApplicationContext -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath*:applicationContext.xml</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+
+  <!-- DispatcherServlet,Spring MVC的核心 -->
+  <servlet>
+    <servlet-name>mvc-dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <!-- 修改配置文件的路径 -->
+      <param-value>classpath*:mvc-dispatcher-servlet.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>mvc-dispatcher</servlet-name>
+    <!-- 表示mvc-dispatcher拦截所有的请求 -->
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>attendanceServerServlet</servlet-name>
+    <servlet-class>com.yejunfeng.server.AttendanceServerServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>attendanceServerServlet</servlet-name>
+    <url-pattern>/attendanceServerServlet</url-pattern>
+  </servlet-mapping>
+
+  <jsp-config>
+    <taglib>
+      <taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>
+      <taglib-location>/WEB-INF/tld/c.tld</taglib-location>
+    </taglib>
+    <taglib>
+      <taglib-uri>http://java.sun.com/jsp/jstl/xml</taglib-uri>
+      <taglib-location>/WEB-INF/tld/x.tld</taglib-location>
+    </taglib>
+    <taglib>
+      <taglib-uri>http://java.sun.com/jsp/jstl/fmt</taglib-uri>
+      <taglib-location>/WEB-INF/tld/fmt.tld</taglib-location>
+    </taglib>
+    <taglib>
+      <taglib-uri>http://java.sun.com/jsp/jstl/sql</taglib-uri>
+      <taglib-location>/WEB-INF/tld/sql.tld</taglib-location>
+    </taglib>
+  </jsp-config>
+</web-app>

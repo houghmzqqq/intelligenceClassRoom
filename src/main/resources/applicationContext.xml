@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx.xsd">
+        
+	<context:annotation-config />
+	
+	<context:component-scan base-package="com.yejunfeng">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+
+
+	<!-- 数据源配置文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+
+	<!-- AOP -->
+	<aop:aspectj-autoproxy />
+	
+	<bean id="dozerBeanMapper" class="org.dozer.DozerBeanMapper">
+		<property name="mappingFiles">
+			<list>
+				<value>dozerBeanMapping.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 数据源配置 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- Hibernate Session -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.cache.use_second_level_cache">false</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="current_session_context_class">thread</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+				<prop key="c3p0.min_size">5</prop>
+				<prop key="c3p0.max_size">30</prop>
+				<prop key="c3p0.time_out">1800</prop> 
+				<prop key="c3p0.max_statement">50</prop> 
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.yejunfeng.PO</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<!-- 事务管理 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- 事务advice -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!--<tx:method name="get*" read-only="true" propagation="REQUIRED" />-->
+			<!--<tx:method name="list*" read-only="true" propagation="REQUIRED" />-->
+			<!--<tx:method name="find*" read-only="true" propagation="REQUIRED" />-->
+			<tx:method name="*" read-only="false" propagation="REQUIRED" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	
+	<aop:config proxy-target-class="true">
+		<aop:advisor pointcut="execution(public * com.yejunfeng.service.*Service.*(..))" advice-ref="txAdvice" />
+	</aop:config>
+	
+	
+</beans>
